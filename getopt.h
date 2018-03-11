@@ -1,4 +1,3 @@
-#ifndef __GETOPT_H__
 /**
  * DISCLAIMER
  * This file is part of the mingw-w64 runtime package.
@@ -56,18 +55,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma warning(disable:4996);
+#ifndef _MSC_VER
+#include_next <getopt.h>
+#else
 
+#ifndef __GETOPT_H__
 #define __GETOPT_H__
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4115) // warning C4115: 'option': named type definition in parentheses
+#endif
+
 /* All the headers include this file. */
-#include <crtdefs.h>
-#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <windows.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -76,9 +79,9 @@ extern "C" {
 #define	REPLACE_GETOPT		/* use this getopt as the system getopt(3) */
 
 #ifdef REPLACE_GETOPT
-int	opterr = 1;		/* if error message should be printed */
-int	optind = 1;		/* index into parent argv vector */
-int	optopt = '?';		/* character checked for validity */
+_declspec(selectany) int	opterr = 1;		/* if error message should be printed */
+_declspec(selectany) int	optind = 1;		/* index into parent argv vector */
+_declspec(selectany) int	optopt = '?';		/* character checked for validity */
 #undef	optreset		/* see getopt.h */
 #define	optreset		__mingw_optreset
 int	optreset;		/* reset getopt */
@@ -216,7 +219,7 @@ permute_args(int panonopt_start, int panonopt_end, int opt_end,
  *
  * [eventually this will replace the BSD getopt]
  */
-int
+inline int
 getopt(int nargc, char * const *nargv, const char *options)
 {
 
@@ -610,7 +613,7 @@ start:
  * getopt_long --
  *	Parse argc/argv argument vector.
  */
-int
+inline int
 getopt_long(int nargc, char * const *nargv, const char *options,
     const struct option *long_options, int *idx)
 {
@@ -623,7 +626,7 @@ getopt_long(int nargc, char * const *nargv, const char *options,
  * getopt_long_only --
  *	Parse argc/argv argument vector.
  */
-int
+inline int
 getopt_long_only(int nargc, char * const *nargv, const char *options,
     const struct option *long_options, int *idx)
 {
@@ -651,3 +654,4 @@ getopt_long_only(int nargc, char * const *nargv, const char *options,
 #endif
 
 #endif /* !defined(__UNISTD_H_SOURCED__) && !defined(__GETOPT_LONG_H__) */
+#endif /* _MSC_VER */
